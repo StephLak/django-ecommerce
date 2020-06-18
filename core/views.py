@@ -68,7 +68,7 @@ class CheckoutView(View):
             return render(self.request, "checkout.html", context)
         except ObjectDoesNotExist:
             messages.info(self.request, "You do not have an active order")
-            return redirect("core:checkout")
+            return redirect("core:order-summary")
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -200,6 +200,10 @@ class CheckoutView(View):
                     messages.warning(
                         self.request, "Invalid payment option selected")
                     return redirect('core:checkout')
+            else:
+                messages.warning(
+                    self.request, "You do not have an active order")
+                return redirect("core:order-summary")
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
             return redirect("core:order-summary")
@@ -480,6 +484,9 @@ class AddCouponView(View):
             except ObjectDoesNotExist:
                 messages.info(self.request, "You do not have an active order")
                 return redirect("core:checkout")
+        else:
+            messages.warning(self.request, "This form is not valid.")
+            return redirect("core:checkout")
 
 
 class RequestRefundView(View):
@@ -515,3 +522,6 @@ class RequestRefundView(View):
             except ObjectDoesNotExist:
                 messages.info(self.request, "This order does not exist.")
                 return redirect("core:request-refund")
+        else:
+            messages.warning(self.request, "This form is not valid.")
+            return redirect("core:request-refund")
