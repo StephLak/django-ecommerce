@@ -353,6 +353,13 @@ class HomeView(ListView):
     template_name = "home.html"
 
 
+class ShirtCategoryView(ListView):
+    queryset = Item.objects.filter(category="S")
+    model = Item
+    paginate_by = 10
+    template_name = "home.html"
+
+
 class OrderSummaryView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
